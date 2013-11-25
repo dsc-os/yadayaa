@@ -1,4 +1,4 @@
 yadayaa
 =======
 
-Yadayaa
+For documentation, see [the wiki](wiki)
