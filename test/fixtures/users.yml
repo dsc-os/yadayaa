@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uuid: MyString
+  email: MyString
+  encrypted_password: MyString
+  sign_in_count: 1
+  current_sign_in_at: 2013-11-25 12:13:20
+  created_at: 
+  updated_at: 2013-11-25 12:13:20
+  display_name: MyString
+
+two:
+  uuid: MyString
+  email: MyString
+  encrypted_password: MyString
+  sign_in_count: 1
+  current_sign_in_at: 2013-11-25 12:13:20
+  created_at: 
+  updated_at: 2013-11-25 12:13:20
+  display_name: MyString
