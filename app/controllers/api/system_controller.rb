@@ -21,4 +21,7 @@ class Api::SystemController < ApiController
     @response[:time] = Time.now
   end
 
+  def register
+
+  end
 end
