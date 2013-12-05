@@ -39,6 +39,7 @@ end
 # Use unicorn as the app server
 # gem 'unicorn'
 
+gem 'passenger', group: :production
 # Use Capistrano for deployment
 gem 'capistrano', group: :development
 gem 'capistrano-rails', group: :development
