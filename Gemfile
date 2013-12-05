@@ -34,10 +34,12 @@ group :doc do
 end
 
 # Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.1.2'
+gem 'bcrypt-ruby', '~> 3.1.2'
 
 # Use unicorn as the app server
 # gem 'unicorn'
+
+gem 'haml'
 
 gem 'passenger', group: :production
 # Use Capistrano for deployment

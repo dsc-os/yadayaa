@@ -11,17 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131125121459) do
-
-  create_table "user_tokens", force: true do |t|
-    t.integer  "user_id"
-    t.string   "token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(version: 20131205150738) do
 
   create_table "users", force: true do |t|
-    t.string   "uuid"
     t.string   "email"
     t.string   "encrypted_password"
     t.integer  "sign_in_count"
@@ -29,6 +21,8 @@ ActiveRecord::Schema.define(version: 20131125121459) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "display_name"
+    t.string   "access_token"
+    t.string   "salt"
   end
 
 end
