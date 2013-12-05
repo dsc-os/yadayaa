@@ -3,6 +3,8 @@ set :repo_url, 'git@github.com:dsc-os/yadayaa.git'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
+set :rvm_ruby_version, '2.0.0-p353'
+
 set :deploy_to, '/var/webs/yada'
 # set :scm, :git
 
