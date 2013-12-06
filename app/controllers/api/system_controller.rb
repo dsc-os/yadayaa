@@ -56,4 +56,26 @@ class Api::SystemController < ApiController
     respond
   end
 
+  def update_profile
+    @user.mobile = params[:mobile] if params[:mobile]
+    @user.office = params[:office] if params[:office]
+    @user.home = params[:home] if params[:home]
+    @user.homepage = params[:homepage] if params[:homepage]
+    @user.save_without_password!
+
+    respond
+  end
+
+  def profile
+    @response[:user] = { :mobile => @user.mobile, :office=> @user.office, :home=>@user.home, :homepage=>@user.homepage }
+
+    respond
+  end
+
+  def change_password
+    @user.password = params[:password]
+    @user.save!
+
+    respond
+  end
 end

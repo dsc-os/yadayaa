@@ -24,6 +24,11 @@ class User < ActiveRecord::Base
     !self.skip_validate_password
   end
 
+  def save_without_password!
+    self.skip_validate_password = true
+    self.save!
+  end
+
   def encrypt_password
     if password.present?
       self.salt = BCrypt::Engine.generate_salt
@@ -44,8 +49,6 @@ class User < ActiveRecord::Base
   end
 
   def lazy_token
-    return self.access_token if self.access_token
-
     self.access_token = Digest::MD5.hexdigest("#{self.id}|#{self.email}#{Time.now}")
     self.save
     return self.access_token

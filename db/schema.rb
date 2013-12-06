@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131205150738) do
+ActiveRecord::Schema.define(version: 20131206112656) do
 
   create_table "users", force: true do |t|
     t.string   "email"
@@ -23,6 +23,10 @@ ActiveRecord::Schema.define(version: 20131205150738) do
     t.string   "display_name"
     t.string   "access_token"
     t.string   "salt"
+    t.string   "mobile"
+    t.string   "home"
+    t.string   "office"
+    t.string   "homepage"
   end
 
 end
