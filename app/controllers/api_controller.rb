@@ -5,6 +5,7 @@ class ApiController < ApplicationController
   protected
 
   def error_render_method(exception)
+    standard_response if @response == nil
     @response[:status] = "error"
     @response[:message] = exception.message
 
