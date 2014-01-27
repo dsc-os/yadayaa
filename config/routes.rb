@@ -1,7 +1,7 @@
 Yadayaa::Application.routes.draw do
 
   get '/api/:version/contact/:id' => 'api/contact#show'
-  post '/api/:version/contact' => 'api/contact#add'
+  post '/api/:version/contact' => 'api/contact#create'
 
   get "/api/:version/test" => 'api/system#test'
   get "/api/:version/testuser" => 'api/system#testuser'

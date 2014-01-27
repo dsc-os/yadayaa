@@ -74,7 +74,6 @@ class ApiTest < ActionDispatch::IntegrationTest
     post "/api/1/profile?access_token=#{access_token}&mobile=1234&home=4321&office=999&homepage=xxx"
     assert_ok_status
     get "/api/1/profile?access_token=#{access_token}"
-    puts @response.body
     assert_equal(json_response["user"]["home"],"4321")
     assert_equal(json_response["user"]["office"],"999")
     assert_equal(json_response["user"]["mobile"],"1234")
@@ -95,5 +94,19 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_ok_status
   end
+
+  test "contacts" do 
+    post "/api/1/register?email=xxx@dsc.net&display_name=testing&password=asdfasdf"
+    assert_ok_status 
+    access_token = json_response["access_token"]
+    post "/api/1/contact?access_token=#{access_token}"
+    assert_error_status
+    post "/api/1/contact?access_token=#{access_token}&display_name=Fred&email=fred@dsc.net"
+    assert_ok_status
+    post "/api/1/contact?access_token=#{access_token}&display_name=Fred&email=fred@dsc.net"
+    assert_error_status
+
+  end
+  
 
 end
