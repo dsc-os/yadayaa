@@ -29,11 +29,20 @@ class Api::SystemController < ApiController
     respond
   end
 
+  def delete_user
+    validate_mode("testing")
+
+    @user.destroy
+    respond
+  end
+
   def signin
     @user = User.where(:email=>params[:email]).first
     if @user && @user.password_ok?(params[:password])
       @response[:access_token] = @user.lazy_token
       @user.signed_in
+    else
+      @user = nil
     end
    
     unless @user

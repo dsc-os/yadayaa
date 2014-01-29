@@ -12,23 +12,24 @@ class Contact < ActiveRecord::Base
   validates_associated :user
 
   def co_contact
+    return nil unless self.corresponding_user_id
 
+    # is this contacts owner in the list of this corresponding user's contacts
+    self.corresponding_user.contacts.where("email = ? or phone = ? or phone = ? or phone = ?", search_field(self.user.email), search_field(self.user.mobile), search_field(self.user.office), search_field(self.user.home)).first
   end
 
   def update_corresponding_user
     return if self.corresponding_user_id
-
-    email = self.email
-    email = "*" * 100 unless email && email.length>0
-    phone = self.phone 
-    phone = "*" * 100 unless phone && phone.length>0
-    u = User.where("email = ? or mobile = ? or home = ? or office = ?", email, phone, phone, phone).first
+    param_email = search_field(self.email)
+    param_phone = search_field(self.phone)
+    u = User.where(["email = ? or mobile = ? or home = ? or office = ?", param_email, param_phone, param_phone, param_phone]).first
     return unless u
-    update_column :corresponding_user, u
+
+    update_column :corresponding_user_id, u.id
   end
 
   def one_contact_method
-    if email==nil && phone==nil || (email.length==0 && phone.length==0)
+    if email==nil && phone==nil || ((email && email.length==0) && (phone && phone.length==0))
       errors.add(:email, "either email or phone must be specified")
     end
   end
@@ -38,17 +39,42 @@ class Contact < ActiveRecord::Base
 
     return if self.status=='CONFIRMED' || self.status=='REJECTED' || self.status=='REMOVED'
 
-    if self.status==nil && self.corresponding_user && self.corresponding_user
-      send_invitation
-    elsif self.status==nil && 
+    if self.status==nil 
+      if self.corresponding_user
+        contact = self.co_contact
+        if contact 
+          make_co_contact(contact)
+        else
+          send_contact_invitation
+        end
+      else
+        send_user_invitation
+      end
     end
   end
 
+  def make_co_contact(contact)
+    update_column :status, "CONFIRMED"
+    contact.update_column :status, "CONFIRMED"
+  end
  
-  def send_invitation
-    # email invite
-    update_column(:status, "INIVITED")
+  def send_contact_invitation
+    # email contact invite
+    update_column(:status, "PENDING")
     update_column(:invitation_sent_at, Time.now)
   end
 
+  def send_user_invitation
+    # email user invite
+    update_column(:status, "INVITED")
+    update_column(:invitation_sent_at, Time.now)
+  end
+
+  private 
+
+  # this is to be used for searching and we don't want to search for an empty value
+  def search_field(v)
+    v = "*" * 100 if v==nil || v.strip.length==0
+    return v
+  end
 end

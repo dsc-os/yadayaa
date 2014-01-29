@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+name1:
   email: name1@dsc.net
   encrypted_password: MyString
   sign_in_count: 1
@@ -9,11 +9,22 @@ one:
   updated_at: 2013-11-25 12:13:20
   display_name: name1
 
-two:
-  email: MyString2@dsc.net
-  encrypted_password: MyString
+# contact_test and other_contact_test : 
+contact_test:
+  email: contacttest@dsc.net
+  <% salt = BCrypt::Engine.generate_salt %>
+  salt: <%= salt %>
+  encrypted_password: <%= BCrypt::Engine.hash_secret('xxx', salt) %>
   sign_in_count: 1
-  current_sign_in_at: 2013-11-25 12:13:20
-  created_at: 
-  updated_at: 2013-11-25 12:13:20
-  display_name: name2
+  display_name: contact_test
+
+other_contact_test:
+  email: other@dsc.net
+  display_name: other_contact_test
+  encrypted_password: Blah
+
+non_conact_test:
+  email: noncontacttest@dsc.net
+  display_name: non_contact_test
+  encrypted_password: Blah 
+

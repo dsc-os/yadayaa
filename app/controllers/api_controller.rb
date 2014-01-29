@@ -4,6 +4,12 @@ class ApiController < ApplicationController
 
   protected
 
+  def validate_mode(mode)
+    if mode!=Preference.get("server mode").value
+      raise Exception.new("command not available in the current mode '#{Preference.get('server mode').value}'")
+    end
+  end
+
   def error_render_method(exception)
     standard_response if @response == nil
     @response[:status] = "error"

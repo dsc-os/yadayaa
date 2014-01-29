@@ -3,9 +3,13 @@ Yadayaa::Application.routes.draw do
   get '/api/:version/contact/:id' => 'api/contact#show'
   post '/api/:version/contact' => 'api/contact#create'
 
+
   get "/api/:version/test" => 'api/system#test'
   get "/api/:version/testuser" => 'api/system#testuser'
   get "/api/:version/time" => 'api/system#time'
+
+  delete "/api/:version/user" => 'api/system#delete_user'
+
   post "/api/:version/signin/:email/:password" => 'api/system#signin', :email => /[^\/]+/, :password => /[^\/]+/
   post "/api/:version/signout" => 'api/system#signout'
   post "/api/:version/register" => 'api/system#register'

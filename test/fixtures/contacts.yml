@@ -1,13 +1,10 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  user_id: 1
-  email: MyString
-  phone: MyString
-  display_name: MyString
+contact1: 
+  <% u = User.where(email: "other@dsc.net").first %>
+  user_id: <%= u.id %>
+  email: contacttest@dsc.net
+  display_name: Seeded Test Contact
+  status: PENDING
+  invitation_sent_at: '2014-01-01 00:00:00'
 
-two:
-  user_id: 1
-  email: MyString
-  phone: MyString
-  display_name: MyString
