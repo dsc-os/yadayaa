@@ -64,10 +64,10 @@ class ApiTest < ActionDispatch::IntegrationTest
     get "/api/1/testuser?access_token=#{access_token}"
     assert_response 401
 
-    post "/api/1/signin/esting@dsc.net/asdfasdf"
+    post "/api/1/signin?email=esting@dsc.net&password=asdfasdf"
     assert_error_status
     assert_equal("incorrect email address or password", json_response["message"])
-    post "/api/1/signin/testing@dsc.net/asdfasdf"
+    post "/api/1/signin?email=testing@dsc.net&password=asdfasdf"
     assert_response :success
     assert_ok_status
   end
@@ -98,18 +98,18 @@ class ApiTest < ActionDispatch::IntegrationTest
     post "/api/1/signout?access_token=#{access_token}"
     assert_response :success
     assert_ok_status
-    post "/api/1/signin/zzz@dsc.net/asdfasdfx"
+    post "/api/1/signin?email=zzz@dsc.net&password=asdfasdfx"
     assert_response :success
     assert_ok_status
   end
 
   test "bad password" do
-    post "/api/1/signin/contacttest@dsc.net/123"
+    post "/api/1/signin?email=contacttest@dsc.net&password=123"
     assert_error_status
   end
     
   test "contacts" do 
-    post "/api/1/signin/contacttest@dsc.net/xxx"
+    post "/api/1/signin?email=contacttest@dsc.net&password=xxx"
     assert_ok_status
     access_token = json_response["access_token"]
     # bad contact add parameters

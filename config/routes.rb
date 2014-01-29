@@ -10,7 +10,7 @@ Yadayaa::Application.routes.draw do
 
   delete "/api/:version/user" => 'api/system#delete_user'
 
-  post "/api/:version/signin/:email/:password" => 'api/system#signin', :email => /[^\/]+/, :password => /[^\/]+/
+  post "/api/:version/signin" => 'api/system#signin'
   post "/api/:version/signout" => 'api/system#signout'
   post "/api/:version/register" => 'api/system#register'
   get "/api/:version/validate_display_name/:display_name" => 'api/system#validate_display_name', :display_name=>/[^\/]+/
