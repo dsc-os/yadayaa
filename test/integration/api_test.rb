@@ -77,6 +77,15 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_ok_status
   end
 
+  test "register an invited user" do 
+    u = User.where(:email=>"beeninvited@dsc.net").first
+    assert_equal("INVITED", u.status)
+    post "/api/1/register?email=beeninvited@dsc.net&display_name=testingreg&password=asdfasdf"
+    assert_ok_status
+    u = User.where(:email=>"beeninvited@dsc.net").first
+    assert_equal("REGISTERED", u.status)
+  end
+
   test "user profile" do 
     post "/api/1/register?email=xxx@dsc.net&display_name=testing&password=asdfasdf"
     assert_ok_status 
@@ -113,101 +122,6 @@ class ApiTest < ActionDispatch::IntegrationTest
     assert_error_status
   end
     
-  test "create contacts" do 
-    access_token = signin
-    # bad contact add parameters
-    post "/api/1/contact?access_token=#{access_token}"
-    assert_error_status
-    # good contact add
-    post "/api/1/contact?access_token=#{access_token}&display_name=FredTest&email=fred@dsc.net"
-    assert_ok_status
-    contact = Contact.where(display_name: "FredTest").first
-    assert_equal(contact.id, json_response["contact_id"])
-    # bad contact because display_name is not unique
-    post "/api/1/contact?access_token=#{access_token}&display_name=FredTest&email=fred2@dsc.net"
-    assert_error_status
-
-    # check user now has 1 test contact, with INVITED status
-    u = User.where(email: "contacttest@dsc.net").first
-    assert_equal(1, u.contacts.size)
-    contact = u.contacts.first
-    assert_equal('fred@dsc.net', contact.email)
-    assert_equal('INVITED', contact.status)
-
-     
-    # if I add other@dsc.net to my contact list we should both be automatically confirmed, because 
-    # other@dsc.net already has me in his contact list (by seed data) 
-    Contact.where(display_name: "Seeded Test Contact").first.update_corresponding_user
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact&email=other@dsc.net"
-    assert_ok_status
-    contact = Contact.where(display_name: "TestContact").first
-    assert_equal('CONFIRMED', contact.status)
-    contact = Contact.where(display_name: "Seeded Test Contact").first
-    assert_equal('CONFIRMED', contact.status)
-
-
-    # if I add noncontacttest@dsc.net to my contact list the relationship should be PENDING
-    # because though they exist, they don't have me on their contact list
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact2&email=noncontacttest@dsc.net"
-    assert_ok_status
-    contact = Contact.where(display_name: "TestContact2").first
-    assert_equal('PENDING', contact.status)
-
-  end
-  
-  test "delete contact" do
-    access_token = signin
-
-    Contact.where(display_name: "Seeded Test Contact").first.update_corresponding_user
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact3&email=other@dsc.net"
-    assert_ok_status
-    contact = Contact.where(display_name: "Seeded Test Contact").first
-    assert_equal('CONFIRMED', contact.status)
-
-    contact_id = json_response["contact_id"]
-
-    delete "/api/1/contact/#{contact_id}?access_token=#{access_token}"
-    assert_ok_status
-    assert_equal(contact_id, json_response["contact_id"])
-    contact = Contact.where(display_name: "Seeded Test Contact").first
-    assert_equal('REMOVED', contact.status)
-  end 
-
-  test "edit contact" do 
-    access_token = signin
-
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact4&email=other@dsc.net"
-    contact_id = json_response["contact_id"]
-    put "/api/1/contact/#{contact_id}?access_token=#{access_token}&display_name=TestContact4X"
-    assert_ok_status
-    new_contact = Contact.find(contact_id)
-    assert_equal("TestContact4X", new_contact.display_name)
-  end
-
-  test "list contacts" do
-    access_token = signin
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact4&email=other@dsc.net"
-    get "/api/1/contacts?access_token=#{access_token}"
-    assert_ok_status
-    contact = JSON.parse(json_response["contacts"]).first
-    assert_equal("TestContact4", contact["display_name"])
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact5&email=otherx@dsc.net"
-    get "/api/1/contacts?access_token=#{access_token}"
-    assert_equal(2, JSON.parse(json_response["contacts"]).size)
-  end
-
-  test "show contact" do
-    return
-    access_token = signin
-    post "/api/1/contact?access_token=#{access_token}&display_name=TestContact5&email=other@dsc.net"
-    contact_id = json_response["contact_id"]
-    get "/api/1/contact/#{contact_id}?access_token=#{access_token}"
-    assert_ok_status
-    puts json_response["contact"]
-    contact = JSON.parse(json_response["contact"])
-    puts contact
-
-  end
 
 
 end

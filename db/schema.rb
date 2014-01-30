@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140128201515) do
+ActiveRecord::Schema.define(version: 20140130134337) do
 
   create_table "contacts", force: true do |t|
     t.integer  "user_id"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20140128201515) do
     t.string   "home"
     t.string   "office"
     t.string   "homepage"
+    t.string   "status"
   end
 
 end

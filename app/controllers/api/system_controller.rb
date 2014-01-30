@@ -38,7 +38,7 @@ class Api::SystemController < ApiController
 
   def signin
     @user = User.where(:email=>params[:email]).first
-    if @user && @user.password_ok?(params[:password])
+    if @user && @user.password_ok?(params[:password]) && @user.is_registered?
       @response[:access_token] = @user.lazy_token
       @user.signed_in
     else
@@ -59,7 +59,7 @@ class Api::SystemController < ApiController
   end 
 
   def register
-    @user = User.create!(:password=>params[:password], :email=>params[:email], :display_name=>params[:display_name])
+    @user = User.register_user({:password=>params[:password], :email=>params[:email], :display_name=>params[:display_name]})
     @user.signed_in
     @response[:access_token] = @user.lazy_token
     respond

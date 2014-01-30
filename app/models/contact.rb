@@ -11,6 +11,11 @@ class Contact < ActiveRecord::Base
   validates :user_id, :presence=>true
   validate :one_contact_method
 
+  def api_view
+    { "email"=>self.email, "id"=>self.id, "updated_at"=>self.updated_at, 
+       "display_name"=>self.display_name, "phone"=>self.phone, "status"=>self.status }
+  end
+
   def destroy_co_contacts
     self.co_contact.update_column :status, "REMOVED"
   end
@@ -57,6 +62,14 @@ class Contact < ActiveRecord::Base
     end
   end
 
+  def update_contact_status(status)
+    if status=='ACCEPT'
+      make_co_contact(self.co_contact)
+    elsif status=='REJECT'
+      update_column :status, 'REJECTED'
+    end
+  end
+
   def make_co_contact(contact)
     update_column :status, "CONFIRMED"
     contact.update_column :status, "CONFIRMED"
@@ -64,14 +77,18 @@ class Contact < ActiveRecord::Base
  
   def send_contact_invitation
     # email contact invite
-    update_column(:status, "PENDING")
-    update_column(:invitation_sent_at, Time.now)
+    update_column :status, "PENDING"
+    update_column :invitation_sent_at, Time.now
+
+    Contact.create(:user_id=>self.corresponding_user_id, :email=>self.user.email, :display_name=>self.user.display_name, :status=>'INVITED', :corresponding_user_id=>self.user_id)
   end
 
   def send_user_invitation
     # email user invite
+    user = User.invite(self.email)
     update_column(:status, "INVITED")
     update_column(:invitation_sent_at, Time.now)
+    update_column(:corresponding_user_id, user.id)
   end
 
   private 

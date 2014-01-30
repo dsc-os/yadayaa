@@ -1,4 +1,6 @@
 require 'bcrypt'
+require 'digest/sha1'
+
 class EmailValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     unless value =~ /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
@@ -21,6 +23,31 @@ class User < ActiveRecord::Base
 
   before_save :encrypt_password
   after_save :clear_password
+
+  def User.invite(email)
+    # send invitation email
+
+    User.create!(:status=>"INVITED", :email=>email, :password=>Digest::SHA1.hexdigest(rand(100000000).to_s), :display_name=>email.gsub('@', '_'))
+  end
+
+  def User.register_user(options)
+    email = options[:email]
+    raise Exception.new("invalid user registration (no email)") unless email
+
+    user = User.where(:email=>email).first
+    if user
+      if user.is_registered?
+        raise Exception.new("user already registered")
+      else
+        options[:status] = "REGISTERED"
+        user.update_attributes!(options)
+        return user
+      end
+    else   
+      options[:status] = "REGISTERED"
+      return User.create!(options)
+    end
+  end
 
   def should_validate_password?
     !self.skip_validate_password
@@ -69,5 +96,21 @@ class User < ActiveRecord::Base
     self.current_sign_in_at = nil
     self.access_token = nil
     self.save!
+  end
+
+  def is_registered?
+    self.status=="REGISTERED"
+  end
+
+  def is_invited?
+    self.status=="INVITED"
+  end
+
+  def update_contact_status(email, phone, status)
+    email = "*"*10 if email==nil || email==''
+    phone = "*"*10 if phone==nil || phone==''
+    contact = self.contacts.where("email = ? or phone = ?", email, phone).first
+    raise Exception.new("contact not found") unless contact
+    contact.update_contact_status(status)
   end
 end

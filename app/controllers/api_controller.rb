@@ -54,7 +54,7 @@ class ApiController < ApplicationController
   end
 
   def respond
-    render :json=>JSON.pretty_generate(@response), :status=>@status
+    render :json=>@response.to_json, :status=>@status
   end
 
 end

@@ -1,5 +1,6 @@
 Yadayaa::Application.routes.draw do
 
+  post '/api/:version/contact/accept' => 'api/contact#status_update'
   get '/api/:version/contact/:id' => 'api/contact#show'
   post '/api/:version/contact' => 'api/contact#create'
   delete '/api/:version/contact/:id' => 'api/contact#delete'

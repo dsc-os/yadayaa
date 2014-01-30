@@ -26,16 +26,17 @@ class Api::ContactController < ApiController
   end
 
   def list
-    @response[:contacts] = []
-    @user.contacts.each do |contact|
-      @response[:contacts] << contact.to_json(:only=>[:id, :email, :phone, :display_name, :update_at, :status])
-    end
+    @response[:contacts] = @user.contacts.map {|contact| contact.api_view}
     respond
   end
 
   def show
-    @response[:contact] = @contact
+    @response[:contact] = @contact.api_view
+    respond
+  end
 
+  def status_update
+    @user.update_contact_status(params[:email], params[:phone], params[:status]) 
     respond
   end
 
