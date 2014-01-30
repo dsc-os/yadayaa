@@ -2,7 +2,9 @@ Yadayaa::Application.routes.draw do
 
   get '/api/:version/contact/:id' => 'api/contact#show'
   post '/api/:version/contact' => 'api/contact#create'
-
+  delete '/api/:version/contact/:id' => 'api/contact#delete'
+  put 'api/:version/contact/:id' => 'api/contact#update'
+  get 'api/:version/contacts' => 'api/contact#list'
 
   get "/api/:version/test" => 'api/system#test'
   get "/api/:version/testuser" => 'api/system#testuser'
@@ -16,6 +18,8 @@ Yadayaa::Application.routes.draw do
   get "/api/:version/validate_display_name/:display_name" => 'api/system#validate_display_name', :display_name=>/[^\/]+/
   post "/api/:version/profile" => 'api/system#update_profile'
   get "/api/:version/profile" => 'api/system#profile'
+
   post "/api/:version/password/:password" => 'api/system#change_password', :password=>/[^\/]+/
+  post "/api/:version/password" => 'api/system#change_password', :password=>/[^\/]+/
   get "/" => "home#index"
 end

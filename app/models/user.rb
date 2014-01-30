@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   include BCrypt
   attr_accessor :password, :skip_validate_password
 
-  has_many :contacts
+  has_many :contacts, dependent: :destroy
 
   DisplayNameFormat = /\A[a-z0-9\-\_\.]+\z/i
  

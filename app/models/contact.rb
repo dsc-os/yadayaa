@@ -5,12 +5,16 @@ class Contact < ActiveRecord::Base
   after_save :update_corresponding_user
 
   after_save :update_status
+  before_destroy :destroy_co_contacts
 
   validates :display_name, :presence=>true, :uniqueness=>{scope: :user_id}
   validates :user_id, :presence=>true
   validate :one_contact_method
-  validates_associated :user
 
+  def destroy_co_contacts
+    self.co_contact.update_column :status, "REMOVED"
+  end
+  
   def co_contact
     return nil unless self.corresponding_user_id
 
