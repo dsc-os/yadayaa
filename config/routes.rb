@@ -1,5 +1,10 @@
 Yadayaa::Application.routes.draw do
 
+  post '/api/:version/send_message' => 'api/comms#send_message'
+  get '/api/:version/send_message' => 'api/comms#send_message'
+  get '/api/:version/message/:id' => 'api/comms#message'
+  get '/api/:version/messages' => 'api/comms#messages'
+
   post '/api/:version/contact/accept' => 'api/contact#status_update'
   get '/api/:version/contact/:id' => 'api/contact#show'
   post '/api/:version/contact' => 'api/contact#create'

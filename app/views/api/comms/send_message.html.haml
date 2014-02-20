@@ -1,0 +1,20 @@
+%h1 Send Message
+
+= form_for @message, :url=>"/api/1/send_message", :html => { :multipart => true } do |f|
+
+  = include_token(@user)
+
+  .field
+    %label Text
+    = f.text_field :body
+
+  .field
+    %label Audio
+    = f.file_field :audio
+
+  .field
+    %label Recipients
+    = select_tag :recipient_ids, options_from_collection_for_select(@user.contacts, "id", "display_name"), {:include_blank=>false, :multiple=>true}
+
+  .field
+    = f.submit "Send"

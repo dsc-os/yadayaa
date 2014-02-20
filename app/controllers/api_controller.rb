@@ -19,6 +19,11 @@ class ApiController < ApplicationController
   end
 
   def auth
+    if Preference.get("server mode").value=='testing' && params[:bypass]
+      @user = User.find(params[:bypass])
+      return
+    end
+
     if request.authorization
       user,password = ActionController::HttpAuthentication::Basic.decode_credentials(request).split(':')
       logger.debug "HTTP Authentication user: '#{user}'"

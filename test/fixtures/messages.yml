@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  body: MyText
+  audio_file_name: MyString
+  delivered_to_all: false
+  lat: 1.5
+  lon: 1.5
+
+two:
+  user_id: 1
+  body: MyText
+  audio_file_name: MyString
+  delivered_to_all: false
+  lat: 1.5
+  lon: 1.5

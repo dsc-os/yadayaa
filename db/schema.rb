@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140130134337) do
+ActiveRecord::Schema.define(version: 20140217212046) do
 
   create_table "contacts", force: true do |t|
     t.integer  "user_id"
@@ -25,11 +25,32 @@ ActiveRecord::Schema.define(version: 20140130134337) do
     t.integer  "corresponding_user_id"
   end
 
+  create_table "messages", force: true do |t|
+    t.integer  "user_id"
+    t.text     "body"
+    t.string   "audio_file_name"
+    t.boolean  "delivered_to_all"
+    t.float    "lat"
+    t.float    "lon"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "audio_content_type"
+  end
+
   create_table "preferences", force: true do |t|
     t.string   "name"
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "recipients", force: true do |t|
+    t.integer  "message_id"
+    t.integer  "user_id"
+    t.datetime "delivered_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "retrieved_at"
   end
 
   create_table "users", force: true do |t|

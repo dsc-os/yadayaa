@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   attr_accessor :password, :skip_validate_password
 
   has_many :contacts, dependent: :destroy
-
+  
   DisplayNameFormat = /\A[a-z0-9\-\_\.]+\z/i
  
   validates :email, uniqueness: true, email:true, presence: true
